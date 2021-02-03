@@ -1,0 +1,36 @@
+{
+	"name": "express-microservice",
+	"version": "1.0.0",
+	"description": "fake toko online",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "restuwahyu13"
+	},
+	"keywords": [
+		"core",
+		"microservice"
+	],
+	"author": "restuwahyu13",
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"compression": "^1.7.4",
+		"cors": "^2.8.5",
+		"cote": "^1.0.2",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"helmet": "^4.4.1",
+		"kraken-js": "^2.3.0",
+		"mongoose": "^5.11.14",
+		"streambox-collection": "0.0.5"
+	},
+	"devDependencies": {
+		"morgan": "^1.10.0",
+		"nodemon": "^2.0.7"
+	}
+}
