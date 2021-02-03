@@ -4,7 +4,12 @@ const OrderSchema = new mongoose.Schema({
 		type: mongoose.Types.ObjectId,
 		unique: true,
 		trim: true,
-		required: [true, 'product id is required']
+		required: [true, 'product_id is required']
+	},
+	customer_name: {
+		type: String,
+		trim: true,
+		required: [true, 'customer_name is required']
 	},
 	quantity: {
 		type: Number,
