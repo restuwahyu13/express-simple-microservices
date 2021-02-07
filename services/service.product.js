@@ -4,13 +4,13 @@ const products = require('../models/model.product')
 const ProductRequester = new cote.Requester({
 	name: 'Product Service Request',
 	key: 'Product',
-	requests: ['product:create']
+	requests: ['product:create', 'product:results', 'product:result', 'product:delete', 'product:update']
 })
 
 const ProductResponder = new cote.Responder({
 	name: 'Product Service Response',
 	key: 'Product',
-	respondsTo: ['product:create']
+	respondsTo: ['product:create', 'product:results', 'product:result', 'product:delete', 'product:update']
 })
 
 /**
