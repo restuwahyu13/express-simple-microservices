@@ -4,12 +4,14 @@ const products = require('../models/model.product')
 
 const OrderPublisher = new core.Publisher({
 	name: 'Order Publisher',
-	key: 'order'
+	key: 'order',
+	broadcasts: ['update:product']
 })
 
 const OrderSubcriber = new core.Subscriber({
 	name: 'Order Subscriber',
-	key: 'order'
+	key: 'order',
+	subscribesTo: ['update:product']
 })
 
 const OrderRequester = new core.Requester({
@@ -41,7 +43,7 @@ OrderResponder.on('order:create', async (req, cb) => {
 
 		if (createProduct) {
 			cb(null, { statusCode: 201, message: 'add new order successfully' })
-			OrderPublisher.emit('order:product', { product_id, quantity })
+			OrderPublisher.publish('update:product', { body: { product_id, quantity } })
 		} else {
 			cb(null, { statusCode: 403, message: 'add new order failed' })
 		}
@@ -54,7 +56,7 @@ OrderResponder.on('order:create', async (req, cb) => {
  * @description result all order service
  */
 
-OrderResponder.on('order:results', async (req, cb) => {
+OrderResponder.once('order:results', async (req, cb) => {
 	// try {
 	// 	const resultProducts = await products.find({}, { __v: 0 }).lean()
 	// 	if (resultProducts.length < 1) {
@@ -71,7 +73,7 @@ OrderResponder.on('order:results', async (req, cb) => {
  * @description result order service
  */
 
-OrderResponder.on('order:result', async (req, cb) => {
+OrderResponder.once('order:result', async (req, cb) => {
 	// try {
 	// 	const resultProduct = await products.findById(req.params, { __v: 0 }).lean()
 	// 	if (!resultProduct) {
@@ -88,7 +90,7 @@ OrderResponder.on('order:result', async (req, cb) => {
  * @description delete order service
  */
 
-OrderResponder.on('order:delete', async (req, cb) => {
+OrderResponder.once('order:delete', async (req, cb) => {
 	// try {
 	// 	const deleteProduct = await products.findOneAndDelete({ _id: req.params.id }).lean()
 	// 	if (!deleteProduct) {
@@ -105,7 +107,7 @@ OrderResponder.on('order:delete', async (req, cb) => {
  * @description update order service
  */
 
-OrderResponder.on('order:update', async (req, cb) => {
+OrderResponder.once('order:update', async (req, cb) => {
 	// try {
 	// 	const updateProduct = await products
 	// 		.findOneAndUpdate(
@@ -131,27 +133,28 @@ OrderResponder.on('order:update', async (req, cb) => {
 })
 
 /**
- * @description Subscriber order service
+ * @description Subscriber order service from Publisher
  */
 
-OrderSubcriber.on('order:product', async (error, req) => {
+OrderSubcriber.on('update:product', async (req) => {
 	try {
-		const { _id, product_stock } = await products.findOne({ _id: req.product_id }).lean()
-		const subtractStock = product_stock - req.quantity
+		const { product_id, quantity } = req.body
+		const { _id, product_stock } = await products.findOne({ _id: product_id }).lean()
+		const subtractStock = product_stock - quantity
 
 		const updateProduct = await products
 			.findOneAndUpdate(
 				{ _id: _id },
 				{
 					$set: {
-						product_stock: rsubtractStock,
+						product_stock: subtractStock,
 						updated_at: new Date()
 					}
 				}
 			)
 			.lean()
 	} catch (error) {
-		console.log(error)
+		return new Error(error)
 	}
 })
 
