@@ -1,6 +1,6 @@
 #/!/bin.sh
 
-echo -n "enter environment type ? "
+echo -n "enter type environment ? "
 read type
 
 if [ "$type"  == "prod" ]
