@@ -8,6 +8,7 @@ services:
     container_name: node
     restart: unless-stopped
     image: microservice/node
+    env_file: .env
     ports:
       - 3000:3000
     volumes:
@@ -19,14 +20,20 @@ services:
   product-service:
     extends: microservice.cote.io
     command: node services/service.product.js
+    depends_on:
+      - db
 
   order-service:
     extends: microservice.cote.io
     command: node services/service.product.js
+    depends_on:
+      - db
 
   monitor-service:
     extends: microservice.cote.io
     command: node services/service.monitor.js
+    ports:
+      - 5000:5000
 
   #####################
   #### NGINX SERVICE
@@ -35,14 +42,33 @@ services:
     container_name: nginx
     restart: unless-stopped
     image: nginx:alpine
-    depends_on:
-      - microservice.cote.io
     ports:
       - 80:80
+    depends_on:
+      - microservice.cote.io
     volumes:
-      - ./nginx/default.conf/etc/nginx/conf.d/default.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - microservice-network
+
+  #####################
+  #### MONGODB SERVICE
+  #####################
+  db:
+    container_name: mongodb
+    restart: unless-stopped
+    image: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=microservice
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/var/lib/mongodb/data
+    networks:
+      - microservice-network
+
+volumes:
+  db:
 
 networks:
   microservice-network:
