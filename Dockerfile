@@ -1,5 +1,4 @@
-FROM nodejs:14-alpine
-RUN mkdir /usr/src/app
+FROM node:14-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
 COPY . ./
