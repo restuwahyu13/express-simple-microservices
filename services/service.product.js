@@ -17,7 +17,7 @@ const ProductResponder = new cote.Responder({
  * @description create product service
  */
 
-ProductResponder.once('product:create', async (req, cb) => {
+ProductResponder.on('product:create', async (req, cb) => {
 	try {
 		const checkProduct = await products.findOne({ product_name: req.body.product_name })
 
@@ -43,7 +43,7 @@ ProductResponder.once('product:create', async (req, cb) => {
  * @description result all product service
  */
 
-ProductResponder.once('product:results', async (req, cb) => {
+ProductResponder.on('product:results', async (req, cb) => {
 	try {
 		const resultProducts = await products.find({}, { __v: 0 }).lean()
 
@@ -61,7 +61,7 @@ ProductResponder.once('product:results', async (req, cb) => {
  * @description result product service
  */
 
-ProductResponder.once('product:result', async (req, cb) => {
+ProductResponder.on('product:result', async (req, cb) => {
 	try {
 		const resultProduct = await products.findById(req.params, { __v: 0 }).lean()
 
@@ -79,7 +79,7 @@ ProductResponder.once('product:result', async (req, cb) => {
  * @description delete product service
  */
 
-ProductResponder.once('product:delete', async (req, cb) => {
+ProductResponder.on('product:delete', async (req, cb) => {
 	try {
 		const deleteProduct = await products.findOneAndDelete({ _id: req.params.id }).lean()
 
@@ -97,7 +97,7 @@ ProductResponder.once('product:delete', async (req, cb) => {
  * @description update product service
  */
 
-ProductResponder.once('product:update', async (req, cb) => {
+ProductResponder.on('product:update', async (req, cb) => {
 	try {
 		const updateProduct = await products
 			.findOneAndUpdate(

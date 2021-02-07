@@ -30,7 +30,7 @@ const OrderResponder = new core.Responder({
  * @description create order service
  */
 
-OrderResponder.once('order:create', async (req, cb) => {
+OrderResponder.on('order:create', async (req, cb) => {
 	try {
 		const { product_id, customer_name, quantity } = req.body
 
@@ -56,7 +56,7 @@ OrderResponder.once('order:create', async (req, cb) => {
  * @description result all order service
  */
 
-OrderResponder.once('order:results', async (req, cb) => {
+OrderResponder.on('order:results', async (req, cb) => {
 	try {
 		const resultOrders = await orders.find({}, { __v: 0 }).lean()
 		if (resultOrders.length < 1) {
@@ -73,7 +73,7 @@ OrderResponder.once('order:results', async (req, cb) => {
  * @description result order service
  */
 
-OrderResponder.once('order:result', async (req, cb) => {
+OrderResponder.on('order:result', async (req, cb) => {
 	try {
 		const resultOrder = await orders.findById(req.params, { __v: 0 }).lean()
 		if (!resultOrder) {
@@ -90,7 +90,7 @@ OrderResponder.once('order:result', async (req, cb) => {
  * @description delete order service
  */
 
-OrderResponder.once('order:delete', async (req, cb) => {
+OrderResponder.on('order:delete', async (req, cb) => {
 	try {
 		const deleteOrder = await orders.findOneAndDelete({ _id: req.params.id }).lean()
 		if (!deleteOrder) {
@@ -107,7 +107,7 @@ OrderResponder.once('order:delete', async (req, cb) => {
  * @description update order service
  */
 
-OrderResponder.once('order:update', async (req, cb) => {
+OrderResponder.on('order:update', async (req, cb) => {
 	try {
 		const updateProduct = await products
 			.findOneAndUpdate(
@@ -136,7 +136,7 @@ OrderResponder.once('order:update', async (req, cb) => {
  * @description Subscriber order service from Publisher
  */
 
-OrderSubcriber.once('update:product', async (req) => {
+OrderSubcriber.on('update:product', async (req) => {
 	try {
 		const { product_id, quantity } = req.body
 		const { _id, product_stock } = await products.findOne({ _id: product_id }).lean()

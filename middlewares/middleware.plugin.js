@@ -9,7 +9,7 @@ const morgan = require('morgan')
 module.exports = (app) => {
 	app.use(bodyParser.urlencoded({ extended: true }))
 	app.use(bodyParser.json({ limit: '1mb' }))
-	app.use(helmet())
+	app.use(helmet({ contentSecurityPolicy: false }))
 	app.use(cors())
 	app.use(
 		compression({
