@@ -1,14 +1,25 @@
 const core = require('cote')
-const orders = require('../models/model.product')
+const orders = require('../models/model.order')
+const products = require('../models/model.product')
+
+const OrderPublisher = new core.Publisher({
+	name: 'Order Publisher',
+	key: 'order'
+})
+
+const OrderSubcriber = new core.Subscriber({
+	name: 'Order Subscriber',
+	key: 'order'
+})
 
 const OrderRequester = new core.Requester({
-	name: 'Order Product Requester',
+	name: 'Order Requester',
 	key: 'order',
 	requests: ['order:create', 'order:results', 'order:result', 'order:delete', 'order:update']
 })
 
 const OrderResponder = new core.Responder({
-	name: 'Order Product Responder',
+	name: 'Order Responder',
 	key: 'order',
 	requests: ['order:create', 'order:results', 'order:result', 'order:delete', 'order:update']
 })
@@ -18,24 +29,25 @@ const OrderResponder = new core.Responder({
  */
 
 OrderResponder.on('order:create', async (req, cb) => {
-	// try {
-	// 	const checkProduct = await products.findOne({ product_name: req.body.product_name })
-	// 	if (checkProduct) {
-	// 		cb(null, { statusCode: 409, message: 'product already exist' })
-	// 	} else {
-	// 		const createProduct = await products.create({
-	// 			product_name: req.body.product_name,
-	// 			product_price: req.body.product_price,
-	// 			product_stock: req.body.product_stock,
-	// 			created_at: new Date()
-	// 		})
-	// 		if (createProduct) {
-	// 			cb(null, { statusCode: 201, message: 'add new product successfully' })
-	// 		}
-	// 	}
-	// } catch (error) {
-	// 	cb(error, { statusCode: 500, message: 'internal server error' })
-	// }
+	try {
+		const { product_id, customer_name, quantity } = req.body
+
+		const createProduct = await orders.create({
+			product_id,
+			customer_name,
+			quantity,
+			created_at: new Date()
+		})
+
+		if (createProduct) {
+			cb(null, { statusCode: 201, message: 'add new order successfully' })
+			OrderPublisher.emit('order:product', { product_id, quantity })
+		} else {
+			cb(null, { statusCode: 403, message: 'add new order failed' })
+		}
+	} catch (error) {
+		cb(error, { statusCode: 500, message: 'internal server error' })
+	}
 })
 
 /**
@@ -116,6 +128,31 @@ OrderResponder.on('order:update', async (req, cb) => {
 	// } catch (error) {
 	// 	cb(error, { statusCode: 500, message: 'internal server error' })
 	// }
+})
+
+/**
+ * @description Subscriber order service
+ */
+
+OrderSubcriber.on('order:product', async (error, req) => {
+	try {
+		const { _id, product_stock } = await products.findOne({ _id: req.product_id }).lean()
+		const subtractStock = product_stock - req.quantity
+
+		const updateProduct = await products
+			.findOneAndUpdate(
+				{ _id: _id },
+				{
+					$set: {
+						product_stock: rsubtractStock,
+						updated_at: new Date()
+					}
+				}
+			)
+			.lean()
+	} catch (error) {
+		console.log(error)
+	}
 })
 
 module.exports = { OrderRequester, OrderResponder }
