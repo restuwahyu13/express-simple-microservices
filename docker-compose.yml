@@ -1,14 +1,17 @@
 version: '3.4'
 services:
   #####################
-  #### NODE SERVICE
+  #### API SERVICE
   #####################
   microservice.cote.io:
     build: .
-    container_name: node
     restart: unless-stopped
-    image: microservice/node
-    env_file: .env
+    container_name: api-service
+    image: microservice/api-service
+    environment:
+      - MONGO_URI=mongodb://localhost:27010/microservice
+    depends_on:
+      - db
     ports:
       - 3000:3000
     volumes:
@@ -17,21 +20,45 @@ services:
     networks:
       - microservice-network
 
+  #####################
+  #### PRODUCT SERVICE
+  #####################
   product-service:
-    extends: microservice.cote.io
+    build: .
+    restart: unless-stopped
+    container_name: product-service
+    image: microservice/product-service
     command: node services/service.product.js
-    depends_on:
-      - db
+    volumes:
+      - ./services/service.product.js:/usr/src/app
+    networks:
+      - microservice-network
 
+  #####################
+  #### ORDER SERVICE
+  #####################
   order-service:
-    extends: microservice.cote.io
-    command: node services/service.product.js
-    depends_on:
-      - db
+    build: .
+    restart: unless-stopped
+    container_name: order-service
+    image: microservice/order-service
+    command: node services/service.order.js
+    volumes:
+      - ./services/service.order.js:/usr/src/app
+    networks:
+      - microservice-network
 
+  #####################
+  #### MONITOR SERVICE
+  #####################
   monitor-service:
-    extends: microservice.cote.io
+    build: .
+    container_name: monitor-service
+    restart: unless-stopped
+    image: microservice/monitor-service
     command: node services/service.monitor.js
+    volumes:
+      - ./services/monitor.order.js:/usr/src/app
     ports:
       - 5000:5000
 
@@ -57,11 +84,11 @@ services:
   db:
     container_name: mongodb
     restart: unless-stopped
-    image: mongodb
+    image: mongo
     environment:
       - MONGO_INITDB_DATABASE=microservice
     ports:
-      - 27017:27017
+      - 27010:27017
     volumes:
       - db:/var/lib/mongodb/data
     networks:
