@@ -11,7 +11,7 @@ require('./middlewares/middleware.route')(app)
 mongoose.Promise = global.Promise
 mongoose
 	.connect(process.env.MONGO_URI, {
-		useFindAndModify: true,
+		useFindAndModify: false,
 		useUnifiedTopology: true,
 		useNewUrlParser: true
 	})
