@@ -21,75 +21,73 @@ exports.controller = {
 		})
 	},
 	resultsOrder: (req, res) => {
-		// ProductRequester.send({ type: 'order:results' }, (error, result) => {
-		// 	if (result.statusCode >= 400) {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message
-		// 		})
-		// 	} else {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message,
-		// 			products: result.products
-		// 		})
-		// 	}
-		// })
+		OrderRequester.send({ type: 'order:results' }, (error, result) => {
+			if (result.statusCode >= 400) {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message
+				})
+			} else {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message,
+					orders: result.orders
+				})
+			}
+		})
 	},
 	resultOrder: (req, res) => {
-		// ProductRequester.send({ type: 'order:result', params: req.params }, (error, result) => {
-		// 	if (result.statusCode >= 400) {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message
-		// 		})
-		// 	} else {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message,
-		// 			products: result.product
-		// 		})
-		// 	}
-		// })
+		OrderRequester.send({ type: 'order:result', params: req.params }, (error, result) => {
+			if (result.statusCode >= 400) {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message
+				})
+			} else {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message,
+					order: result.order
+				})
+			}
+		})
 	},
 	deleteOrder: (req, res) => {
-		// ProductRequester.send({ type: 'order:delete', params: req.params }, (error, result) => {
-		// 	if (result.statusCode >= 400) {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message
-		// 		})
-		// 	} else {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message,
-		// 			products: result.product
-		// 		})
-		// 	}
-		// })
+		OrderRequester.send({ type: 'order:delete', params: req.params }, (error, result) => {
+			if (result.statusCode >= 400) {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message
+				})
+			} else {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message
+				})
+			}
+		})
 	},
 	updateOrder: (req, res) => {
-		// ProductRequester.send({ type: 'order:update', params: req.params, body: req.body }, (error, result) => {
-		// 	if (result.statusCode >= 400) {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message
-		// 		})
-		// 	} else {
-		// 		streamBox(res, result.statusCode, {
-		// 			method: req.method,
-		// 			statusCode: result.statusCode,
-		// 			message: result.message,
-		// 			products: result.product
-		// 		})
-		// 	}
-		// })
+		OrderRequester.send({ type: 'order:update', params: req.params, body: req.body }, (error, result) => {
+			if (result.statusCode >= 400) {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message
+				})
+			} else {
+				streamBox(res, result.statusCode, {
+					method: req.method,
+					statusCode: result.statusCode,
+					message: result.message
+				})
+			}
+		})
 	}
 }

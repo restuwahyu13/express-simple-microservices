@@ -51,7 +51,7 @@ exports.controller = {
 					method: req.method,
 					statusCode: result.statusCode,
 					message: result.message,
-					products: result.product
+					product: result.product
 				})
 			}
 		})
@@ -68,8 +68,7 @@ exports.controller = {
 				streamBox(res, result.statusCode, {
 					method: req.method,
 					statusCode: result.statusCode,
-					message: result.message,
-					products: result.product
+					message: result.message
 				})
 			}
 		})
@@ -86,8 +85,7 @@ exports.controller = {
 				streamBox(res, result.statusCode, {
 					method: req.method,
 					statusCode: result.statusCode,
-					message: result.message,
-					products: result.product
+					message: result.message
 				})
 			}
 		})

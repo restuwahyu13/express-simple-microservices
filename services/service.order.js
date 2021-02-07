@@ -30,7 +30,7 @@ const OrderResponder = new core.Responder({
  * @description create order service
  */
 
-OrderResponder.on('order:create', async (req, cb) => {
+OrderResponder.once('order:create', async (req, cb) => {
 	try {
 		const { product_id, customer_name, quantity } = req.body
 
@@ -57,16 +57,16 @@ OrderResponder.on('order:create', async (req, cb) => {
  */
 
 OrderResponder.once('order:results', async (req, cb) => {
-	// try {
-	// 	const resultProducts = await products.find({}, { __v: 0 }).lean()
-	// 	if (resultProducts.length < 1) {
-	// 		cb(null, { statusCode: 404, message: 'product is not exist' })
-	// 	} else {
-	// 		cb(null, { statusCode: 200, message: 'product already to use', products: resultProducts })
-	// 	}
-	// } catch (error) {
-	// 	cb(error, { statusCode: 500, message: 'internal server error' })
-	// }
+	try {
+		const resultOrders = await orders.find({}, { __v: 0 }).lean()
+		if (resultOrders.length < 1) {
+			cb(null, { statusCode: 404, message: 'order is not exist' })
+		} else {
+			cb(null, { statusCode: 200, message: 'order already to use', orders: resultOrders })
+		}
+	} catch (error) {
+		cb(error, { statusCode: 500, message: 'internal server error' })
+	}
 })
 
 /**
@@ -74,16 +74,16 @@ OrderResponder.once('order:results', async (req, cb) => {
  */
 
 OrderResponder.once('order:result', async (req, cb) => {
-	// try {
-	// 	const resultProduct = await products.findById(req.params, { __v: 0 }).lean()
-	// 	if (!resultProduct) {
-	// 		cb(null, { statusCode: 404, message: 'product id not exist or deleted from owner' })
-	// 	} else {
-	// 		cb(null, { statusCode: 200, message: 'product already to use', product: resultProduct })
-	// 	}
-	// } catch (error) {
-	// 	cb(error, { statusCode: 500, message: 'internal server error' })
-	// }
+	try {
+		const resultOrder = await orders.findById(req.params, { __v: 0 }).lean()
+		if (!resultOrder) {
+			cb(null, { statusCode: 404, message: 'order id not exist or deleted from owner' })
+		} else {
+			cb(null, { statusCode: 200, message: 'order already to use', order: resultOrder })
+		}
+	} catch (error) {
+		cb(error, { statusCode: 500, message: 'internal server error' })
+	}
 })
 
 /**
@@ -91,16 +91,16 @@ OrderResponder.once('order:result', async (req, cb) => {
  */
 
 OrderResponder.once('order:delete', async (req, cb) => {
-	// try {
-	// 	const deleteProduct = await products.findOneAndDelete({ _id: req.params.id }).lean()
-	// 	if (!deleteProduct) {
-	// 		cb(null, { statusCode: 404, message: 'product id not exist delete product failed' })
-	// 	} else {
-	// 		cb(null, { statusCode: 200, message: 'delete product successfuly' })
-	// 	}
-	// } catch (error) {
-	// 	cb(error, { statusCode: 500, message: 'internal server error' })
-	// }
+	try {
+		const deleteOrder = await orders.findOneAndDelete({ _id: req.params.id }).lean()
+		if (!deleteOrder) {
+			cb(null, { statusCode: 404, message: 'order id not exist delete product failed' })
+		} else {
+			cb(null, { statusCode: 200, message: 'delete order successfuly' })
+		}
+	} catch (error) {
+		cb(error, { statusCode: 500, message: 'internal server error' })
+	}
 })
 
 /**
@@ -108,35 +108,35 @@ OrderResponder.once('order:delete', async (req, cb) => {
  */
 
 OrderResponder.once('order:update', async (req, cb) => {
-	// try {
-	// 	const updateProduct = await products
-	// 		.findOneAndUpdate(
-	// 			{ _id: req.params.id },
-	// 			{
-	// 				$set: {
-	// 					product_name: req.body.product_name,
-	// 					product_price: req.body.product_price,
-	// 					product_stock: req.body.product_stock,
-	// 					updated_at: new Date()
-	// 				}
-	// 			}
-	// 		)
-	// 		.lean()
-	// 	if (!updateProduct) {
-	// 		cb(null, { statusCode: 404, message: 'product id not exist update product failed' })
-	// 	} else {
-	// 		cb(null, { statusCode: 200, message: 'update product successfuly' })
-	// 	}
-	// } catch (error) {
-	// 	cb(error, { statusCode: 500, message: 'internal server error' })
-	// }
+	try {
+		const updateProduct = await products
+			.findOneAndUpdate(
+				{ _id: req.params.id },
+				{
+					$set: {
+						product_id: req.body.product_id,
+						customer_name: req.body.customer_name,
+						quantity: req.body.quantity,
+						updated_at: new Date()
+					}
+				}
+			)
+			.lean()
+		if (!updateProduct) {
+			cb(null, { statusCode: 404, message: 'order id not exist update order failed' })
+		} else {
+			cb(null, { statusCode: 200, message: 'update order successfuly' })
+		}
+	} catch (error) {
+		cb(error, { statusCode: 500, message: 'internal server error' })
+	}
 })
 
 /**
  * @description Subscriber order service from Publisher
  */
 
-OrderSubcriber.on('update:product', async (req) => {
+OrderSubcriber.once('update:product', async (req) => {
 	try {
 		const { product_id, quantity } = req.body
 		const { _id, product_stock } = await products.findOne({ _id: product_id }).lean()
