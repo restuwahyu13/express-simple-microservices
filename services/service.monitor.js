@@ -1,2 +1,2 @@
 const cote = require('cote')
-new cote.Monitoring({ name: 'Monitor' })
+new cote.Monitor({ name: 'Monitor' });

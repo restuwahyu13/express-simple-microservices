@@ -14,10 +14,10 @@ services:
     depends_on:
       - db
     ports:
-      - '3000:3000'
+      - 3000:3000
     volumes:
-      - ./:/usr/src/app
-      - ./node_modules:/usr/src/app/node_modules
+      - ./:/app
+      - ./node_modules:/app/node_modules
     networks:
       - microservice-network
 
@@ -33,7 +33,7 @@ services:
     image: microservice/monitor-service
     command: node services/service.monitor.js
     volumes:
-      - ./services:/usr/src/app
+      - ./app/services
 
   #####################
   #### PRODUCT SERVICE
@@ -47,9 +47,7 @@ services:
     image: microservice/product-service
     command: node services/service.product.js
     volumes:
-      - ./services:/usr/src/app
-    networks:
-      - microservice-network
+      - ./app/services
 
   #####################
   #### ORDER SERVICE
@@ -63,9 +61,7 @@ services:
     image: microservice/order-service
     command: node services/service.order.js
     volumes:
-      - ./services:/usr/src/app
-    networks:
-      - microservice-network
+      - ./app/services
 
   #####################
   #### NGINX SERVICE
@@ -93,7 +89,7 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=microservice
     ports:
-      - '27017:27017'
+      - 27017:27017
     volumes:
       - db:/var/lib/mongodb/data
     networks:
