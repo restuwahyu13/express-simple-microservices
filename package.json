@@ -25,7 +25,6 @@
 		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
 		"helmet": "^4.4.1",
-		"kraken-js": "^2.3.0",
 		"mongoose": "^5.11.14",
 		"streambox-collection": "0.0.5"
 	},
