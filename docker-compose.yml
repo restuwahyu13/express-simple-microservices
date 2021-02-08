@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 services:
   #####################
   #### API SERVICE
@@ -10,18 +10,30 @@ services:
     restart: unless-stopped
     container_name: api-service
     image: microservice/api-service
-    environment:
-      - MONGO_URI=mongodb://localhost:27010/microservice
+    env_file: .env
     depends_on:
-      - monitor-service
       - db
     ports:
-      - 3000:3000
+      - '3000:3000'
     volumes:
       - ./:/usr/src/app
       - ./node_modules:/usr/src/app/node_modules
     networks:
       - microservice-network
+
+  #####################
+  #### MONITOR SERVICE
+  #####################
+  monitor-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: monitor-service
+    restart: unless-stopped
+    image: microservice/monitor-service
+    command: node services/service.monitor.js
+    volumes:
+      - ./services:/usr/src/app
 
   #####################
   #### PRODUCT SERVICE
@@ -51,25 +63,9 @@ services:
     image: microservice/order-service
     command: node services/service.order.js
     volumes:
-      - ./services/usr/src/app
+      - ./services:/usr/src/app
     networks:
       - microservice-network
-
-  #####################
-  #### MONITOR SERVICE
-  #####################
-  monitor-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: monitor-service
-    restart: unless-stopped
-    image: microservice/monitor-service
-    command: node services/service.monitor.js
-    volumes:
-      - ./services/usr/src/app
-    ports:
-      - 5000:5000
 
   #####################
   #### NGINX SERVICE
@@ -97,7 +93,7 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=microservice
     ports:
-      - 27010:27017
+      - '27017:27017'
     volumes:
       - db:/var/lib/mongodb/data
     networks:
