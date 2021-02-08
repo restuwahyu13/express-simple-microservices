@@ -31,7 +31,11 @@ services:
     container_name: monitor-service
     restart: unless-stopped
     image: microservice/monitor-service
-    command: node services/service.monitor.js
+    command: node services/service.monitor-tool.js
+    ports:
+      - 5000:5000
+    depends_on:
+      - microservice.cote.io
     volumes:
       - ./usr/src/app/services
 

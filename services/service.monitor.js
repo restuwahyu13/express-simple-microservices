@@ -1,2 +1,3 @@
 const cote = require('cote')
-new cote.Monitor({ name: 'Monitor' });
+const port = process.env.PORT || 5000
+cote.MonitoringTool(port)
