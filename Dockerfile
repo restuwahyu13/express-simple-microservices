@@ -11,13 +11,15 @@ RUN apt-get update \
 
 # Copy package.json and any config to working directory
 COPY package*.json \
-  .env ./usr/src/app/
+  .env /usr/src/app/
 
 # Copy all file to working directory
-COPY . ./usr/src/app
+COPY . /usr/src/app
 
 # Install dependencies package for applications use
-RUN npm install && npm audit fix
+RUN cd /usr/src/app \
+  &&  npm install \
+  && npm audit fix
 
 # Run application
 CMD npm start
