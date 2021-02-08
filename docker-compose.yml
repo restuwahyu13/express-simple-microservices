@@ -16,8 +16,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./:/app
-      - ./node_modules:/app/node_modules
+      - ./:/usr/src/app
+      - ./usr/src/app/node_modules
     networks:
       - microservice-network
 
@@ -33,7 +33,7 @@ services:
     image: microservice/monitor-service
     command: node services/service.monitor.js
     volumes:
-      - ./app/services
+      - ./usr/src/app/services
 
   #####################
   #### PRODUCT SERVICE
@@ -47,7 +47,7 @@ services:
     image: microservice/product-service
     command: node services/service.product.js
     volumes:
-      - ./app/services
+      - ./usr/src/app/services
 
   #####################
   #### ORDER SERVICE
@@ -61,7 +61,7 @@ services:
     image: microservice/order-service
     command: node services/service.order.js
     volumes:
-      - ./app/services
+      - ./usr/src/app/services
 
   #####################
   #### NGINX SERVICE
